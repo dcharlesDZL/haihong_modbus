@@ -11,33 +11,41 @@ void setup()
     //WiFi初始化
     String wifiname="Charles";
     String wifipassword="douzhengli123";
-    String APName="hhlab";
-    String APpassword="123456";
-    const char* softAPName=APName.c_str();
-    const char* softAPPassword=APpassword.c_str();
+    const char* apssid ="hhlab";
+    const char* appassword="hhlab123456";
+    //声明配网参数
+    ESP8266WebServer  httpserver(80);
+    char* clientID, nickname, stassid, stapassword;
+    char* htmltext;
 
     //配置ap模式
     {
         IPAddress softLocal(192,168,128,1);
         IPAddress softGateway(192,168,128,1);
         IPAddress softSubnet(255,255,255,0);
-        WiFi.softAPConfig(softLocal, softGateway, softSubnet);
+        WiFi.softAPConfig(softLocal, softGateway, softSubnet);        
+        WiFi.softAP(ssid, password);
         
-        WiFi.softAP(softAPName,softAPpassword);
-
     }
+    //进入配网
+    clientID = "hhlabhardware";
+    const char* indexhtml = "<html><head><meta charset='utf-8'><title>网页配置</title></head><body><form action='/' method='POST'><fieldset><legend align='center'>网页配置</legend><table align='center'><tr><td>设备SN号</td><td><p>%s</p></td></tr><tr><td>设备名字</td><td><input type='text' name='name' value='%s'></td></tr><tr><td>路由器热点SSID:</td><td><input type='text' name='ssid' value='%s'></td></tr><tr><td>路由器密码:</td><td><input type='text' name='pwd' value='%s'></td></tr><tr><td colspan='2' align='center'><button type='submit'>更新配置</button></td></tr></table></fieldset></form><fieldset><legend align='center'>固件更新</legend><table align='center'> <tr> <td colspan='2' align='center'> <button onclick='window.location.href=&quot/update&quot;'>固件升级</button></td></tr></table></fieldset></body></html>"
+    sprintf(htmltext, indexhtml, clientID, nickname, stassid, stapassword);
+    httpserver(softLocal);
+    httpserver.send(200,"text/html",htmltext);
+
     //配置sta模式
     {
-        WiFi.begin(wifiname, wifipassword);
+        WiFi.begin(wifissid, wifipassword);
     }
-    //配置ap+sta模式
-    {
-        WiFi.softAP(softAPName,softAPpassword);
-        //静态配网
-        WiFi.config(ip, gateway, subnet, dns1, dns2);
-        WiFi.hostname(mSavePara.Para.nickname);
-        WiFi.begin(wifiname, wifipassword);
-    }
+    // //配置ap+sta模式
+    // {
+    //     WiFi.softAP(softAPName,softAPpassword);
+    //     //静态配网
+    //     WiFi.config(ip, gateway, subnet, dns1, dns2);
+    //     WiFi.hostname(mSavePara.Para.nickname);
+    //     WiFi.begin(wifiname, wifipassword);
+    // }
 
 }
 void loop()
