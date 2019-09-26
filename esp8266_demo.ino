@@ -10,11 +10,17 @@ void setup()
     Serial.begin(9600);
     //WiFi初始化
     String wifiname="Charles";
-    String wifipassword="douzhengli123";
-    const char* apssid ="hhlab";
-    const char* appassword="hhlab123456";
+    String wifipwd="douzhengli123";
+    String apname ="hhlab";
+    String appwd="hhlab123456";
+    const char* wifissid=wifiname.c_str();
+    const char* wifipassword=wifipwd.c_str();
+    const char* apssid=apname.c_str();
+    const char* appassword=appwd.c_str();
+
+
+
     //声明配网参数
-    ESP8266WebServer  httpserver(80);
     char* clientID, nickname, stassid, stapassword;
     char* htmltext;
 
@@ -28,15 +34,16 @@ void setup()
         
     }
     //进入配网
+    ESP8266WebServer  httpserver(80);
     clientID = "hhlabhardware";
-    const char* indexhtml = "<html><head><meta charset='utf-8'><title>网页配置</title></head><body><form action='/' method='POST'><fieldset><legend align='center'>网页配置</legend><table align='center'><tr><td>设备SN号</td><td><p>%s</p></td></tr><tr><td>设备名字</td><td><input type='text' name='name' value='%s'></td></tr><tr><td>路由器热点SSID:</td><td><input type='text' name='ssid' value='%s'></td></tr><tr><td>路由器密码:</td><td><input type='text' name='pwd' value='%s'></td></tr><tr><td colspan='2' align='center'><button type='submit'>更新配置</button></td></tr></table></fieldset></form><fieldset><legend align='center'>固件更新</legend><table align='center'> <tr> <td colspan='2' align='center'> <button onclick='window.location.href=&quot/update&quot;'>固件升级</button></td></tr></table></fieldset></body></html>"
-    sprintf(htmltext, indexhtml, clientID, nickname, stassid, stapassword);
-    httpserver(softLocal);
+    //const char* indexhtml = "<html><head><meta charset='utf-8'><title>网页配置</title></head><body><form action='/' method='POST'><fieldset><legend align='center'>网页配置</legend><table align='center'><tr><td>设备SN号</td><td><p>%s</p></td></tr><tr><td>设备名字</td><td><input type='text' name='name' value='%s'></td></tr><tr><td>路由器热点SSID:</td><td><input type='text' name='ssid' value='%s'></td></tr><tr><td>路由器密码:</td><td><input type='text' name='pwd' value='%s'></td></tr><tr><td colspan='2' align='center'><button type='submit'>更新配置</button></td></tr></table></fieldset></form><fieldset><legend align='center'>固件更新</legend><table align='center'> <tr> <td colspan='2' align='center'> <button onclick='window.location.href=&quot/update&quot;'>固件升级</button></td></tr></table></fieldset></body></html>"
+    sprintf(htmltext, "<html><head><meta charset='utf-8'><title>网页配置</title></head><body><form action='/' method='POST'><fieldset><legend align='center'>网页配置</legend><table align='center'><tr><td>设备SN号</td><td><p>%s</p></td></tr><tr><td>设备名字</td><td><input type='text' name='name' value='%s'></td></tr><tr><td>路由器热点SSID:</td><td><input type='text' name='ssid' value='%s'></td></tr><tr><td>路由器密码:</td><td><input type='text' name='pwd' value='%s'></td></tr><tr><td colspan='2' align='center'><button type='submit'>更新配置</button></td></tr></table></fieldset></form><fieldset><legend align='center'>固件更新</legend><table align='center'> <tr> <td colspan='2' align='center'> <button onclick='window.location.href=&quot/update&quot;'>固件升级</button></td></tr></table></fieldset></body></html>", clientID, nickname, stassid, stapassword);
+    //httpserver(softLocal);
     httpserver.send(200,"text/html",htmltext);
 
     //配置sta模式
     {
-        WiFi.begin(wifissid, wifipassword);
+        //WiFi.begin(wifissid, wifipassword);
     }
     // //配置ap+sta模式
     // {
