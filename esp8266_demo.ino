@@ -24,7 +24,7 @@ void setup()
         IPAddress softGateway(192,168,128,1);
         IPAddress softSubnet(255,255,255,0);
         WiFi.softAPConfig(softLocal, softGateway, softSubnet);        
-        WiFi.softAP(ssid, password);
+        WiFi.softAP(apssid, appassword);
         
     }
     //进入配网
