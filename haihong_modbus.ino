@@ -6,8 +6,9 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include "parameter.h"
+#include "init.h"
 /*------------------define-----------------*/
-#define BasicAuth()  do{if(!httpserver.authenticate(authname, authpasswd)){ return httpserver.requestAuthentication();}}while(0);
+#define BasicAuth()  do{if(!httpserver.authenticate(mSavePara.Para.authname, mSavePara.Para.authpasswd)){ return httpserver.requestAuthentication();}}while(0);
 
 
 /*------------------init-----------------*/
@@ -15,20 +16,12 @@
 ESP8266WebServer  httpserver(80);
 ESP8266HTTPUpdateServer httpUpdater;
 SoftwareSerial RS485;
-char htmltext[1500];
-//声明配网参数
-const char* clientID = "hhlabhardware";
-//WiFi初始化
-const char* apssid ="hhlab";
-const char* appassword="hhlab123456";
-int isDhcp = 1;
-const char* nickname = "hhlab_abc";
-char* stassid;
-char* stapasswd ;
-char* authname = "admin";
-char* authpasswd = "123456";
-//enum WIFI_MODE {WIFI_AP, WIFI_STA, WIFI_AP_STA, WIFI_OFF};
-int wifi_mode = WIFI_AP_STA;
+WiFiClient tcp_client;
+SavePara mSavePara;
+char* htmltext;
+//声明配网参数、WiFi初始化、微信服务器参数初始化定义在init.h
+
+
 /*-------------------function----------------*/
 void home()//ap模式下，进入主页进行配网
 {
@@ -69,24 +62,24 @@ void setAP()
     IPAddress softGateway(192,168,128,1);
     IPAddress softSubnet(255,255,255,0);
     WiFi.softAPConfig(softLocalIP, softGateway, softSubnet);
-    WiFi.softAP(apssid, appassword);
+    WiFi.softAP(mSavePara.Para.apssid, mSavePara.Para.appasswd);
     Serial.println("ap is ok!");
 }
 //设置sta模式
 void setSta()
 {
-    if (isDhcp == 0)
+    if (mSavePara.Para.isDhcp == 0)
     {
 
     }
-    WiFi.hostname(nickname);
-    WiFi.begin(stassid, stapasswd);
+    WiFi.hostname(mSavePara.Para.nickname);
+    WiFi.begin(mSavePara.Para.stassid, mSavePara.Para.stapasswd);
 }
 //启动WiFi
 void StartWiFi()
 {
     WiFi.disconnect();
-    switch(wifi_mode)
+    switch(mSavePara.Para.wifiMode)
     {
         case WIFI_OFF:
         {
@@ -114,14 +107,25 @@ void StartWiFi()
         }
     }
 }
+//建立tcp连接
+void establish_tcp()
+{
+    tcp_client.connect(mSavePara.Para.tcp_server_host, mSavePara.Para.tcp_server_port);
+}
+//发送HTTP请求
+// void httprequest()
+// {
+//     tcp_client.print()
+// }
 /*------------------setup-----------------*/
 void setup()
 {
     RS485.begin(9600);
     RS485.setPin(13,15);
     Serial.begin(9600);
-    HttpServerInit();
+    ResetConfig();
     StartWiFi();
+    HttpServerInit();
     while(1)
     {
         //监听请求
@@ -135,5 +139,5 @@ void loop()
     int message[8] = {0x01,0x03,0x00,0x00,0x00,0x0f,0x05,0xce};
     for(int i=0; i<8; i++)     RS485.write(message[i]);
     delay(1000);
-    }
+}
 /*-----------------------------------*/

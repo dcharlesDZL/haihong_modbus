@@ -111,21 +111,8 @@ typedef struct _RunningPara{
 
 typedef union _SavePara 
 {
-  struct 
+  struct _Para
   {
-    char jiami[30];
-    byte timeControlEn; //定时
-    byte ntpEn;         //网络授时
-    byte uploadEn;
-    byte wxAlarmEn;
-    byte ldctrlEn;      //联动控制使能
-    byte alarmEn;       //报警总开关
-    byte fileEn;        //数据文件记录
-
-    byte controllerAlarmEn; //控制器内部报警
-    byte relayStartUp;
-    byte portMode;
-    byte deviceID; 
     byte wifiMode;  //0STA 1AP 2STA+AP
     byte isDhcp;
     byte ip[4];
@@ -133,34 +120,17 @@ typedef union _SavePara
     byte gateway[4];
     byte subnet[4];
 
-    //char dispValue[DISP_LEN][30];
+    char* clientID;
     char stassid[20];
     char stapasswd[20];
     char apssid[20];
     char appasswd[20];
     char authname[20];
     char authpasswd[20];
-
-    int wlinterval;//上传间隔
-    char customuptemp[120];
-    char customupurl[70];    
-    char customupaddr[30];//CUSTOM上传
-    char customupkey[45];
-    
-    int fileRecordInterval;
-    char fileTemplate[10];
-    int screenInterval;
-    char screenTemplate[10];
-
-    char openID[60];//微信OPENID
-    char openID2[60];//微信OPENID
-    char appid[60];//APP的UUID
-    char usercode[10];
-    char opencode[10];
     char nickname[20];
-    char punycode[20];
-    //char concmds[CONLEN][50];
-    //byte conact[CONLEN];
-  } Para;
+    char* tcp_server_host;
+    u16 tcp_server_port;
+
+  }Para;
   byte bytes[100];
 } SavePara;
