@@ -1,3 +1,6 @@
 {
-    "programmer": "AVRISP mkII"
+    "programmer": "AVR ISP",
+    "board": "esp8266:esp8266:nodemcuv2",
+    "configuration": "xtal=80,vt=flash,exception=disabled,ssl=all,eesz=4M3M,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200",
+    "sketch": "esp8266_demo.ino"
 }

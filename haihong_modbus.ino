@@ -5,6 +5,7 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
+#include "parameter.h"
 /*------------------define-----------------*/
 #define BasicAuth()  do{if(!httpserver.authenticate(authname, authpasswd)){ return httpserver.requestAuthentication();}}while(0);
 
@@ -12,6 +13,7 @@
 /*------------------init-----------------*/
 //初始化服务器
 ESP8266WebServer  httpserver(80);
+ESP8266HTTPUpdateServer httpUpdater;
 SoftwareSerial RS485;
 char htmltext[1500];
 //声明配网参数
@@ -68,7 +70,7 @@ void setAP()
     IPAddress softSubnet(255,255,255,0);
     WiFi.softAPConfig(softLocalIP, softGateway, softSubnet);
     WiFi.softAP(apssid, appassword);
-    Serial.println('ap is ok!');
+    Serial.println("ap is ok!");
 }
 //设置sta模式
 void setSta()
@@ -130,7 +132,7 @@ void setup()
 void loop()
 {
     //向设备请求参数信息
-    int message[8] = {0x01,0x03,0x00,0x00,0x00,0x0f,0x05,0xce}; 
+    int message[8] = {0x01,0x03,0x00,0x00,0x00,0x0f,0x05,0xce};
     for(int i=0; i<8; i++)     RS485.write(message[i]);
     delay(1000);
     }
